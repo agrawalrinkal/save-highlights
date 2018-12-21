@@ -1,0 +1,23 @@
+#buttonDiv {
+	align-content: center;
+	vertical-align: middle;
+	padding: 5px;
+	display: inline-block;
+}
+
+button {
+  height: 30px;
+  width: 30px;
+  outline: none;
+  vertical-align: middle;
+}
+
+button:hover {
+	height: 40px;
+	width: 40px;
+}
+
+body {
+	width: 250px;
+	height: 70px;
+}
