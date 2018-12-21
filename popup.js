@@ -22,41 +22,47 @@ function constructOptions(colorMap) {
     button.style.backgroundColor = item;
     button.addEventListener('click', function() {
       // Update the extension global store value and print on console
-      chrome.storage.sync.set({color: item}, function() {
-        console.log('color is ' + item);
+      chrome.storage.sync.set({backgroundColor: item}, function() {
+        console.log('background-color is ' + item);
+      })
+      chrome.storage.sync.set({color: colorMap.get(item)}, function() {
+        console.log('color is ' + colorMap.get(item));
       })
 
       //Update the page content using the user selected value
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    		  chrome.tabs.executeScript(
-             tabs[0].id,
-             {
-              code: 'document.body.style.backgroundColor = "' + item + '";' +
-                    'document.body.style.color = "' + colorMap.get(item) + '";'
-             }
-          );
-       });
+      // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+       //  chrome.tabs.executeScript(
+       //     tabs[0].id,
+       //     {
+       //      code: 'document.body.style.backgroundColor = "' + item + '";' +
+       //            'document.body.style.color = "' + colorMap.get(item) + '";'
+       //     }
+       //  );
+      //  });
     });
     page.appendChild(button);
   }
 }
+
 constructOptions(colorMap);
 
-
-
-
-// let changeColor = document.getElementById('changeColor');
-
-// chrome.storage.sync.get('color', function(data) {
-//   changeColor.style.backgroundColor = data.color;
-//   changeColor.setAttribute('value', data.color);
-// });
-
-// changeColor.onclick = function(element) {
-//     let color = element.target.value;
-//     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//       chrome.tabs.executeScript(
-//           tabs[0].id,
-//           {code: 'document.body.style.backgroundColor = "' + color + '";'});
-//     });
-//   };
+function getSelectionHtml() {
+    var html = "";
+    if (typeof window.getSelection != "undefined") {
+        var sel = window.getSelection();
+        if (sel.rangeCount) {
+            var container = document.createElement("div");
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                container.appendChild(sel.getRangeAt(i).cloneContents());
+            }
+            html = container.innerHTML;
+        }
+    } else if (typeof document.selection != "undefined") {
+        if (document.selection.type == "Text") {
+            html = document.selection.createRange().htmlText;
+        }
+    }
+    console.log(html);
+    return html;
+}
